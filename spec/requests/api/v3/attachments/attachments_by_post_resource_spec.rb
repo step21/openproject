@@ -43,7 +43,7 @@ describe 'API v3 Attachments by post resource', type: :request do
   let(:role) { FactoryBot.create(:role, permissions: permissions) }
   let(:permissions) { [:view_messages] }
   let(:board) { FactoryBot.create(:board, project: project) }
-  let(:board_message) { FactoryBot.create(:message, board: board) }
+  let(:board_message) { FactoryBot.create(:message, forum: board) }
 
   subject(:response) { last_response }
 

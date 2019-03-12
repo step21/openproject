@@ -97,12 +97,12 @@ describe Project::Activity, type: :model do
 
   let(:message) do
     FactoryBot.create(:message,
-                      board: board)
+                      forum: board)
   end
 
   let(:message2) do
     FactoryBot.create(:message,
-                      board: board)
+                      forum: board)
   end
 
   let(:time_entry) do

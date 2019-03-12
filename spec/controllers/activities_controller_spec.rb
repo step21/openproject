@@ -172,11 +172,11 @@ describe ActivitiesController, type: :controller do
         }
         let!(:message_1) {
           FactoryBot.create(:message,
-                             board: board)
+                             forum: board)
         }
         let!(:message_2) {
           FactoryBot.create(:message,
-                             board: board)
+                             forum: board)
         }
         let(:params) {
           { project_id: project.id,

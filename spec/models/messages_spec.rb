@@ -45,7 +45,7 @@ describe Message, type: :model do
 
   describe '#project' do
     it 'is the same as the project on wiki' do
-      expect(message.project).to eql(message.board.project)
+      expect(message.project).to eql(message.forum.project)
     end
   end
 end

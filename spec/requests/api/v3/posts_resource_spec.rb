@@ -37,7 +37,7 @@ describe 'API v3 posts resource', type: :request do
     FactoryBot.create(:user, member_in_project: project, member_through_role: role)
   end
   let(:board) { FactoryBot.create(:board, project: project) }
-  let(:message) { FactoryBot.create(:message, board: board) }
+  let(:message) { FactoryBot.create(:message, forum: board) }
   let(:project) { FactoryBot.create(:project) }
   let(:role) { FactoryBot.create(:role, permissions: permissions) }
   let(:permissions) { %i(view_messages) }

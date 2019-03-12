@@ -26,10 +26,12 @@
 # See docs/COPYRIGHT.rdoc for more details.
 #++
 
-FactoryBot.define do
-  factory :board do
-    project
-    sequence(:name) do |n| "Board No. #{n}" end
-    sequence(:description) { |n| "I am the Board No. #{n}" }
-  end
+require 'spec_helper'
+require File.expand_path('../../support/permission_specs', __FILE__)
+
+describe ForumController, 'manage_forums permission', type: :controller do
+  include PermissionSpecs
+
+  check_permission_required_for('forums#create', :manage_forums)
+  check_permission_required_for('forums#move', :manage_forums)
 end

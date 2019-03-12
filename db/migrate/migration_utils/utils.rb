@@ -31,6 +31,20 @@ module Migration
   module Utils
     UpdateResult = Struct.new(:row, :updated)
 
+    def remove_index_if_exists(table, name)
+      if index_exists?(table, name)
+        remove_index table, name
+      end
+    end
+
+    ##
+    # Remove all table names
+    def remove_all_indexes!(table_name)
+      ActiveRecord::Base.connection.indexes(table_name).each do |index|
+        remove_index table_name, name: index.name
+      end
+    end
+
     def say_with_time_silently(message)
       say_with_time message do
         suppress_messages do

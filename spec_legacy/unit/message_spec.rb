@@ -33,41 +33,41 @@ describe Message, type: :model do
 
   before do
     Setting.notified_events = ['message_posted']
-    @board = Board.find(1)
+    @forum = Forum.find(1)
     @user = User.find(1)
   end
 
   it 'should create' do
-    topics_count = @board.topics_count
-    messages_count = @board.messages_count
+    topics_count = @forum.topics_count
+    messages_count = @forum.messages_count
 
-    message = Message.new(board: @board, subject: 'Test message', content: 'Test message content', author: @user)
+    message = Message.new(forum: @forum, subject: 'Test message', content: 'Test message content', author: @user)
     assert message.save
-    @board.reload
+    @forum.reload
     # topics count incremented
-    assert_equal topics_count + 1, @board[:topics_count]
+    assert_equal topics_count + 1, @forum[:topics_count]
     # messages count incremented
-    assert_equal messages_count + 1, @board[:messages_count]
-    assert_equal message, @board.last_message
+    assert_equal messages_count + 1, @forum[:messages_count]
+    assert_equal message, @forum.last_message
     # author should be watching the message
     assert message.watched_by?(@user)
   end
 
   it 'should reply' do
-    topics_count = @board.topics_count
-    messages_count = @board.messages_count
+    topics_count = @forum.topics_count
+    messages_count = @forum.messages_count
     @message = Message.find(1)
     replies_count = @message.replies_count
 
     reply_author = User.find(2)
-    reply = Message.new(board: @board, subject: 'Test reply', content: 'Test reply content', parent: @message, author: reply_author)
+    reply = Message.new(forum: @forum, subject: 'Test reply', content: 'Test reply content', parent: @message, author: reply_author)
     assert reply.save
-    @board.reload
+    @forum.reload
     # same topics count
-    assert_equal topics_count, @board[:topics_count]
+    assert_equal topics_count, @forum[:topics_count]
     # messages count incremented
-    assert_equal messages_count + 1, @board[:messages_count]
-    assert_equal reply, @board.last_message
+    assert_equal messages_count + 1, @forum[:messages_count]
+    assert_equal reply, @forum.last_message
     @message.reload
     # replies count incremented
     assert_equal replies_count + 1, @message[:replies_count]
@@ -79,13 +79,13 @@ describe Message, type: :model do
   it 'should moving message should update counters' do
     @message = Message.find(1)
     assert_no_difference 'Message.count' do
-      # Previous board
-      assert_difference 'Board.find(1).topics_count', -1 do
-        assert_difference 'Board.find(1).messages_count', -(1 + @message.replies_count) do
-          # New board
-          assert_difference 'Board.find(2).topics_count' do
-            assert_difference 'Board.find(2).messages_count', (1 + @message.replies_count) do
-              @message.update_attributes(board_id: 2)
+      # Previous forum
+      assert_difference 'Forum.find(1).topics_count', -1 do
+        assert_difference 'Forum.find(1).messages_count', -(1 + @message.replies_count) do
+          # New forum
+          assert_difference 'Forum.find(2).topics_count' do
+            assert_difference 'Forum.find(2).messages_count', (1 + @message.replies_count) do
+              @message.update_attributes(forum_id: 2)
             end
           end
         end
@@ -95,34 +95,34 @@ describe Message, type: :model do
 
   it 'should destroy topic' do
     message = Message.find(1)
-    board = message.board
-    topics_count = board.topics_count
-    messages_count = board.messages_count
+    forum = message.forum
+    topics_count = forum.topics_count
+    messages_count = forum.messages_count
 
     assert_difference('Watcher.count', -1) do
       assert message.destroy
     end
-    board.reload
+    forum.reload
 
     # Replies deleted
     assert Message.where(parent_id: 1).empty?
     # Checks counters
-    assert_equal topics_count - 1, board.topics_count
-    assert_equal messages_count - 3, board.messages_count
+    assert_equal topics_count - 1, forum.topics_count
+    assert_equal messages_count - 3, forum.messages_count
     # Watchers removed
   end
 
   it 'should destroy reply' do
     message = Message.find(5)
-    board = message.board
-    topics_count = board.topics_count
-    messages_count = board.messages_count
+    forum = message.forum
+    topics_count = forum.topics_count
+    messages_count = forum.messages_count
     assert message.destroy
-    board.reload
+    forum.reload
 
     # Checks counters
-    assert_equal topics_count, board.topics_count
-    assert_equal messages_count - 1, board.messages_count
+    assert_equal topics_count, forum.topics_count
+    assert_equal messages_count - 1, forum.messages_count
   end
 
   it 'should editable by' do
@@ -160,7 +160,7 @@ describe Message, type: :model do
 
   specify 'email notifications for creating a message' do
     assert_difference('ActionMailer::Base.deliveries.count', 3) do
-      message = Message.new(board: @board, subject: 'Test message', content: 'Test message content', author: @user)
+      message = Message.new(forum: @forum, subject: 'Test message', content: 'Test message content', author: @user)
       assert message.save
     end
   end

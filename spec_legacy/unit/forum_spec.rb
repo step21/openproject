@@ -1,13 +1,13 @@
 #-- encoding: UTF-8
 #-- copyright
 # OpenProject is a project management system.
-# Copyright (C) 2012-2015 the OpenProject Foundation (OPF)
+# Copyright (C) 2012-2018 the OpenProject Foundation (OPF)
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License version 3.
 #
 # OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
-# Copyright (C) 2006-2013 Jean-Philippe Lang
+# Copyright (C) 2006-2017 Jean-Philippe Lang
 # Copyright (C) 2010-2013 the ChiliProject Team
 #
 # This program is free software; you can redistribute it and/or
@@ -24,35 +24,41 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# See doc/COPYRIGHT.rdoc for more details.
-module RandomData
-  class BoardSeeder
-    def self.seed!(project)
-      user = User.admin.first
+# See docs/COPYRIGHT.rdoc for more details.
+#++
 
-      puts ''
-      print ' ↳ Creating forum board with posts'
+require 'legacy_spec_helper'
 
-      board = Board.create! project: project,
-                            name: I18n.t('seeders.demo_data.board.name'),
-                            description: I18n.t('seeders.demo_data.board.description')
+describe Forum, type: :model do
+  fixtures :all
 
-      rand(30).times do
-        print '.'
-        message = Message.create board: board,
-                                 author: user,
-                                 subject: Faker::Lorem.words(5).join(' '),
-                                 content: Faker::Lorem.paragraph(5, true, 3)
+  before do
+    @project = Project.find(1)
+  end
 
-        rand(5).times do
-          print '.'
-          Message.create board: board,
-                         author: user,
-                         subject: message.subject,
-                         content: Faker::Lorem.paragraph(5, true, 3),
-                         parent: message
+  it 'should create' do
+    forum = Forum.new(project: @project, name: 'Test forum', description: 'Test forum description')
+    assert forum.save
+    forum.reload
+    assert_equal 'Test forum', forum.name
+    assert_equal 'Test forum description', forum.description
+    assert_equal @project, forum.project
+    assert_equal 0, forum.topics_count
+    assert_equal 0, forum.messages_count
+    assert_nil forum.last_message
+    # last position
+    assert_equal @project.forums.size, forum.position
+  end
+
+  it 'should destroy' do
+    forum = Forum.find(1)
+    assert_difference 'Message.count', -6 do
+      assert_difference 'Attachment.count', -1 do
+        assert_difference 'Watcher.count', -1 do
+          assert forum.destroy
         end
       end
     end
+    assert_equal 0, Message.where(forum_id: 1).count
   end
 end

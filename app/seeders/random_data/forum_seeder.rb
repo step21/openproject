@@ -1,6 +1,7 @@
+#-- encoding: UTF-8
 #-- copyright
 # OpenProject is a project management system.
-# Copyright (C) 2012-2013 the OpenProject Foundation (OPF)
+# Copyright (C) 2012-2015 the OpenProject Foundation (OPF)
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License version 3.
@@ -24,30 +25,34 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 # See doc/COPYRIGHT.rdoc for more details.
-#++
+module RandomData
+  class ForumSeeder
+    def self.seed!(project)
+      user = User.admin.first
 
-object @message
-attributes :id,
-           :subject,
-           :replies_count,
-           :sticked_on
+      puts ''
+      print ' ↳ Creating forum with posts'
 
-node :created_on do |m|
-  m.created_on.iso8601
-end
+      forum = Forum.create! project: project,
+                            name: I18n.t('seeders.demo_data.board.name'),
+                            description: I18n.t('seeders.demo_data.board.description')
 
-node :author do |m|
-  partial('users/show', object: m.author)
-end
+      rand(30).times do
+        print '.'
+        message = Message.create forum: forum,
+                                 author: user,
+                                 subject: Faker::Lorem.words(5).join(' '),
+                                 content: Faker::Lorem.paragraph(5, true, 3)
 
-node :last_reply, if: lambda { |m| m.last_reply } do |m|
-  partial('messages/show', object: m.last_reply)
-end
-
-node :isSticky do |m|
-  m.sticky?
-end
-
-node :isLocked do |m|
-  m.locked?
+        rand(5).times do
+          print '.'
+          Message.create forum: forum,
+                         author: user,
+                         subject: message.subject,
+                         content: Faker::Lorem.paragraph(5, true, 3),
+                         parent: message
+        end
+      end
+    end
+  end
 end

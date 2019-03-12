@@ -51,7 +51,7 @@ describe 'API v3 Attachment resource', type: :request, content_type: :json do
   let(:wiki) { FactoryBot.create(:wiki, project: project) }
   let(:wiki_page) { FactoryBot.create(:wiki_page, wiki: wiki) }
   let(:board) { FactoryBot.create(:board, project: project) }
-  let(:board_message) { FactoryBot.create(:message, board: board) }
+  let(:board_message) { FactoryBot.create(:message, forum: board) }
   let(:container) { work_package }
 
   before do

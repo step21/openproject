@@ -59,12 +59,12 @@ module Pages
     def create_board
       page.find('.toolbar-item a', text: 'Board').click
       expect(page).to have_selector('.boards-list--item', wait: 10)
-      ::Pages::Board.new ::Boards::Grid.last
+      ::Pages::Forum.new ::Boards::Grid.last
     end
 
     def open_board(board)
       page.find('td.name a', text: board.name).click
-      ::Pages::Board.new board
+      ::Pages::Forum.new board
     end
   end
 end

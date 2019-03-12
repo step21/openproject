@@ -197,7 +197,7 @@ describe Project, type: :model do
     assert_raises(ActiveRecord::RecordNotFound) do Project.find(@ecookbook.id) end
     # make sure related data was removed
     assert_equal 0, Member.where(project_id: @ecookbook.id).count
-    assert_equal 0, Board.where(project_id: @ecookbook.id).count
+    assert_equal 0, Forum.where(project_id: @ecookbook.id).count
     assert_equal 0, WorkPackage.where(project_id: @ecookbook.id).count
   end
 
@@ -215,7 +215,7 @@ describe Project, type: :model do
     assert_equal 0, EnabledModule.count
     assert_equal 0, Category.count
     assert_equal 0, Relation.count
-    assert_equal 0, Board.count
+    assert_equal 0, Forum.count
     assert_equal 0, Message.count
     assert_equal 0, News.count
     assert_equal 0, Query.where('project_id IS NOT NULL').count
@@ -964,9 +964,9 @@ describe Project, type: :model do
     it 'should copy boards' do
       assert @project.copy(@source_project)
 
-      assert_equal 1, @project.boards.size
-      @project.boards.each do |board|
-        assert !@source_project.boards.include?(board)
+      assert_equal 1, @project.forums.size
+      @project.forums.each do |board|
+        assert !@source_project.forums.include?(board)
       end
     end
 
