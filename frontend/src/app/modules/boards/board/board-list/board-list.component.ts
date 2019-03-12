@@ -158,7 +158,9 @@ export class BoardListComponent extends AbstractWidgetComponent implements OnIni
       .pipe(
         withLoadingIndicator(this.indicatorInstance, 50),
       )
-      .subscribe(query => this.query = query);
+      .subscribe(query => {
+        this.querySpace.query.putValue(query);
+      });
   }
 
   private get indicatorInstance() {

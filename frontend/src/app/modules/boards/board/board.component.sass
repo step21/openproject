@@ -54,7 +54,10 @@
   .boards-list--add-item-text
     transform: rotate(90deg)
 
-// Changes when container is editable
-.board--container.-editable
+.board--container
+  position: relative
+
+  // Changes when container is editable
+  &.-editable
   .boards-list--add-item
     cursor: pointer

@@ -1,0 +1,33 @@
+<ng-container>
+  <ng-container *ngIf="mode === 'inactive'">
+    <div *ngIf="canAdd">
+      <a class="wp-inline-create--add-link"
+         href
+         role="link"
+         [ngClass]="{'wp-inline-create--split-link': hasReferenceClass }"
+         (accessibleClick)="handleCreateClick()"
+         [attr.aria-label]="text.addNewCard">
+        <op-icon icon-classes="icon icon-add"></op-icon>
+        <span [textContent]="text.addNewCard"></span>
+      </a>
+    </div>
+    <div *ngIf="canReference">
+      <a class="wp-inline-create--reference-link wp-inline-create--split-link"
+         href
+         role="link"
+         (accessibleClick)="handleReferenceClick()"
+         [attr.aria-label]="text.addExisting">
+        <op-icon icon-classes="icon icon-add"></op-icon>
+        <span [textContent]="text.addExisting"></span>
+      </a>
+    </div>
+  </ng-container>
+  <div *ngIf="mode === 'reference'"
+       class="wp-inline-create--reference-container">
+    <ndc-dynamic [ndcDynamicComponent]="referenceClass"
+                 [ndcDynamicInjector]="injector"
+                 [ndcDynamicOutputs]="referenceOutputs">
+    </ndc-dynamic>
+  </div>
+</ng-container>
+

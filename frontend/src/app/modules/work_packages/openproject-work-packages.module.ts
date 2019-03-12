@@ -156,6 +156,7 @@ import {WorkPackageCardViewComponent} from "core-components/wp-card-view/wp-card
 import {WorkPackageIsolatedQuerySpaceDirective} from "core-app/modules/work_packages/query-space/wp-isolated-query-space.directive";
 import {WorkPackageDmService} from "core-app/modules/hal/dm-services/work-package-dm.service";
 import {WorkPackageRelationsService} from "core-components/wp-relations/wp-relations.service";
+import {WorkPackageCardViewInlineCreateComponent} from "core-components/wp-card-view/wp-card-inline-create.component";
 
 @NgModule({
   imports: [
@@ -360,6 +361,7 @@ import {WorkPackageRelationsService} from "core-components/wp-relations/wp-relat
 
     // Card view
     WorkPackageCardViewComponent,
+    WorkPackageCardViewInlineCreateComponent,
   ],
   entryComponents: [
     // Split view
